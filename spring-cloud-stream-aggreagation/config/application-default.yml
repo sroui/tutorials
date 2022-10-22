@@ -1,0 +1,27 @@
+---
+# =========================================================================================
+# This configuration file contains configuration and properties for local development. When
+# the application is deployed to Kubernetes, the same file content is mounted to the docker
+# container using a ConfigMap. These ConfigMap are set per environment using a HelmRelease.
+# =========================================================================================
+
+# In local we don't want to handle X-Forwarded-* headers
+server:
+  forward-headers-strategy: native
+
+# Activate devtool to hot reload the application when af file is updated.
+#
+# !!!! DO NOT SET THIS PROPERTY IN PRODUCTION !!!!
+#
+# See https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html
+spring:
+  devtools:
+    remote:
+      secret: digimind-dev-tools-enabled
+
+# Override logging configuration
+logging:
+  level.root: INFO
+  level.org.springframework: INFO
+  level.org.apache.kafka: WARN
+  level.com.soufianeroui: DEBUG

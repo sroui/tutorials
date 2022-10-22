@@ -1,0 +1,91 @@
+---
+# =========================================================================================
+# This configuration file contains global configuration and properties, like Spring conf,
+# and common log and app settings. Use the application.yml file in the config folder to set
+# properties per environments, like references to external system, etc.
+# =========================================================================================
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    session:
+      persistent: false
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/xml
+  # See https://docs.spring.io/spring-boot/docs/current/reference/html/web.html#web.graceful-shutdown
+  shutdown: graceful
+
+spring:
+  main:
+    banner-mode: log
+
+  jackson:
+    default-property-inclusion: non_null
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+    time-zone: UTC
+
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+  cloud:
+    stream:
+      function:
+        definition: queries;queriesEvents
+      bindings:
+        queries-in-0:
+          destination: top-reputation-datasource-${environment}
+          consumer:
+            concurrency: 4
+
+        queriesErrors-out-0:
+          destination: top-reputation-datasource-${environment}.errors
+
+        queriesAcks-out-0:
+          destination: top-reputation-sources-acks-${environment}
+
+        datasourceEvents-out-0:
+          destination: top-reputation-datasource-events-${environment}
+
+        queriesEvents-in-0:
+          destination: top-reputation-sources-events-${environment}
+
+      default:
+        group: top-reputation-datasource-${environment}
+        contentType: application/json
+        consumer:
+          maxAttempts: 5
+          backOffMaxInterval: 30
+          retryableExceptions:
+            org.springframework.messaging.converter.MessageConversionException: false
+
+aggregator:
+  correlation: headers['schedulerId']
+  #messages.size = commit handler + response of top search results request + two responses of two top search suggestions requests ("query" request and "query " request ) + responses of top search suggestions requests with query and each letter in the ISO basic Latin alphabet
+  release: messages.size == 1 + 1 + 2 + @environment.getProperty('remote.topreputation.google.suggestion.letters').split(',').length
+  messageStoreType: simple
+  group-timeout: '600000' # 10 minutes
+
+management:
+  security.enabled: false
+  endpoints.web.exposure.include:
+    - prometheus
+    - health
+    - bindings
+  # See https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints.kubernetes-probes.lifecycle
+  endpoint.health.probes.enabled: true
+  health:
+    livenessState.enabled: true
+    readinessState.enabled: true
+  metrics:
+    enable:
+      http:
+        client:
+          requests: false
+
+logging:
+  level.root: WARN
+  level.org.springframework.boot.Application: INFO
+  level.org.springframework.boot.SpringApplication: INFO
+  level.com.digimind.services.topreputation: INFO
+  level.org.apache.geode: WARN
