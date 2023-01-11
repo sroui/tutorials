@@ -1,9 +1,3 @@
----
-# =========================================================================================
-# This configuration file contains global configuration and properties, like Spring conf,
-# and common log and app settings. Use the application.yml file in the config folder to set
-# properties per environments, like references to external system, etc.
-# =========================================================================================
 server:
   port: 8080
   servlet:
@@ -28,64 +22,36 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 30s
 
+  task:
+    scheduling:
+      pool:
+        size: 10
+    execution:
+      thread-name-prefix: event-supplier-
+
   cloud:
     stream:
-      function:
-        definition: queries;queriesEvents
       bindings:
-        queries-in-0:
-          destination: top-reputation-datasource-${environment}
+        outputChannel-in-0:
           consumer:
-            concurrency: 4
-
-        queriesErrors-out-0:
-          destination: top-reputation-datasource-${environment}.errors
-
-        queriesAcks-out-0:
-          destination: top-reputation-sources-acks-${environment}
-
-        datasourceEvents-out-0:
-          destination: top-reputation-datasource-events-${environment}
-
-        queriesEvents-in-0:
-          destination: top-reputation-sources-events-${environment}
-
-      default:
-        group: top-reputation-datasource-${environment}
-        contentType: application/json
-        consumer:
-          maxAttempts: 5
-          backOffMaxInterval: 30
-          retryableExceptions:
-            org.springframework.messaging.converter.MessageConversionException: false
+            max-attempts: 0
 
 aggregator:
-  correlation: headers['schedulerId']
-  #messages.size = commit handler + response of top search results request + two responses of two top search suggestions requests ("query" request and "query " request ) + responses of top search suggestions requests with query and each letter in the ISO basic Latin alphabet
-  release: messages.size == 1 + 1 + 2 + @environment.getProperty('remote.topreputation.google.suggestion.letters').split(',').length
+  correlation: headers[T(com.soufianeroui.tutorials.scs.aggregation.event.aggregator.constants.EventsAggregatorConstants).EVENT_GROUP_ID_MESSAGE_HEADER]
+  release: messages.size == T(com.soufianeroui.tutorials.scs.aggregation.event.aggregator.constants.EventsAggregatorConstants).EVENT_GROUP_SIZE
   messageStoreType: simple
-  group-timeout: '600000' # 10 minutes
+  group-timeout: '1000' # 30 minutes
 
 management:
-  security.enabled: false
   endpoints.web.exposure.include:
-    - prometheus
     - health
     - bindings
-  # See https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints.kubernetes-probes.lifecycle
   endpoint.health.probes.enabled: true
   health:
     livenessState.enabled: true
     readinessState.enabled: true
-  metrics:
-    enable:
-      http:
-        client:
-          requests: false
 
 logging:
-  level.root: WARN
-  level.org.springframework.boot.Application: INFO
-  level.org.springframework.boot.SpringApplication: INFO
-  level.com.digimind.services.topreputation: INFO
-  level.org.apache.geode: WARN
+  level.root: INFO
+  level.org.springframework.boot: INFO
+  level.com.soufianeroui: INFO

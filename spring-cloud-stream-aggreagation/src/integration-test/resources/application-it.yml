@@ -2,14 +2,4 @@ logging:
   level.root: WARN
   level.org.springframework.boot: INFO
   level.org.springframework.test: INFO
-  level.com.digimind.services.topreputation: DEBUG
-  level.org.apache.kafka.clients: WARN
-  level.org:
-    hibernate:
-      SQL:
-        TRACE
-      type:
-        descriptor:
-          sql:
-            BasicBinder:
-              TRACE
+  level.com.soufianeroui: DEBUG

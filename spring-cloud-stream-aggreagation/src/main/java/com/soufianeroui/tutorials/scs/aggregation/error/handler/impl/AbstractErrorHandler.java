@@ -3,6 +3,12 @@ package com.soufianeroui.tutorials.scs.aggregation.error.handler.impl;
 import com.soufianeroui.tutorials.scs.aggregation.error.handler.ErrorHandler;
 import org.springframework.messaging.support.ErrorMessage;
 
+
+/**
+ * abstract error message handler
+ *
+ * @author Soufiane Roui
+ */
 public abstract class AbstractErrorHandler implements ErrorHandler {
     protected ErrorHandler next;
 

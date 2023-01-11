@@ -4,6 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.support.ErrorMessage;
 import org.springframework.stereotype.Component;
 
+/**
+ * Logs error messages
+ *
+ * @author Soufiane Roui
+ */
 @Slf4j
 @Component
 public class LogErrorHandler extends AbstractErrorHandler {

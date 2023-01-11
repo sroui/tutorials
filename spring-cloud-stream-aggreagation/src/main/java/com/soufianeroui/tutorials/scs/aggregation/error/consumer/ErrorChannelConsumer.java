@@ -8,13 +8,21 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
+import static org.springframework.messaging.MessageHeaders.ERROR_CHANNEL;
+
+
+/**
+ * Handles all exceptions thrown when consuming messages by spring integration flows (functions included)
+ *
+ * @author Soufiane Roui
+ */
 @Component
 @RequiredArgsConstructor
 public class ErrorChannelConsumer implements Consumer<ErrorMessage> {
     private final ErrorHandlerChain handlerChain;
 
     @Override
-    @ServiceActivator(inputChannel = "errorChannel")
+    @ServiceActivator(inputChannel = ERROR_CHANNEL)
     public void accept(ErrorMessage errorMessage) {
         handlerChain.handle(errorMessage);
     }

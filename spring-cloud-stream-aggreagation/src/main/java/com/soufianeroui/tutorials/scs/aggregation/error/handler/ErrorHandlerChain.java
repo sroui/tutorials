@@ -8,6 +8,14 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.messaging.support.ErrorMessage;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * Error handler chain
+ *
+ * <p>Note: It is an implementation of chain of responsibility design pattern.</p>
+ *
+ * @author Soufiane Roui
+ */
 @Component
 @Slf4j
 public class ErrorHandlerChain implements ApplicationContextAware {

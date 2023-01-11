@@ -1,6 +1,6 @@
 package com.soufianeroui.tutorials.scs.aggregation.error.consumer;
 
-import com.soufianeroui.tutorials.scs.aggregation.query.error.handler.ErrorHandlerChain;
+import com.soufianeroui.tutorials.scs.aggregation.error.handler.ErrorHandlerChain;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
