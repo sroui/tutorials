@@ -22,14 +22,12 @@ The observables exposed by the order service are listed bellow:
 
 ## Logs:
 
-
-
 ## BACKLOG
 - DONE what types of metrics you can use with the observation api
   - the observation api supports only Timer and Sample API which are part of Gauge
   Histogram, and Summary
 - Add documentation
-- Add docker compose file and set ggrafana, tracing technology, prometheus
+- Add docker compose file and set grafana, tracing technology, prometheus
 - Add code documentation
 - Add unit/integration tests
 - Add observation code
