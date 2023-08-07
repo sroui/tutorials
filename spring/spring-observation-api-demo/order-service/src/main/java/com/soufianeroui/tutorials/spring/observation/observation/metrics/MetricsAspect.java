@@ -1,6 +1,6 @@
 package com.soufianeroui.tutorials.spring.observation.observation.metrics;
 
-import com.soufianeroui.tutorials.spring.observation.product.dto.ProductDto;
+import com.soufianeroui.tutorials.spring.observation.order.dto.OrderDto;
 import com.soufianeroui.tutorials.spring.observation.utils.aop.AOPUtils;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
@@ -22,18 +22,18 @@ import static com.soufianeroui.tutorials.spring.observation.observation.metrics.
 public class MetricsAspect {
     private final ObservationRegistry observationRegistry;
 
-    @Pointcut("execution(* com.soufianeroui.tutorials.spring.observation.product.service.ProductService.findAll())")
+    @Pointcut("execution(* com.soufianeroui.tutorials.spring.observation.order.service.OrderService.createOrder())")
     public void fetchProductsPointcut() { //NOSONAR
     }
 
-    @Pointcut("bean(productsCountTask)")
+    @Pointcut("bean(ordersCountTask)")
     public void productsCountTaskPointcut() { //NOSONAR
     }
 
     @SuppressWarnings("unchecked")
 //    @Around("fetchProductsPointcut()")
-    public Flux<ProductDto> observeFetchedProducts(ProceedingJoinPoint proceedingJoinPoint) {
-        Supplier<Flux<ProductDto>> productFluxSupplier = () -> (Flux<ProductDto>) AOPUtils.proceed(proceedingJoinPoint);
+    public Flux<OrderDto> observeFetchedProducts(ProceedingJoinPoint proceedingJoinPoint) {
+        Supplier<Flux<OrderDto>> productFluxSupplier = () -> (Flux<OrderDto>) AOPUtils.proceed(proceedingJoinPoint);
         //todo end-to-end reactive
         return null;
     }

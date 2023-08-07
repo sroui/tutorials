@@ -1,11 +1,11 @@
-package com.soufianeroui.tutorials.spring.observation.product.model;
+package com.soufianeroui.tutorials.spring.observation.order.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Product {
+public class Order {
     private Long id;
     private String name;
 }
