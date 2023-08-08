@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public abstract class OrderDtoAssembler {
-    public abstract OrderDto assemble(Order order);
+public interface OrderDtoAssembler {
+    OrderDto assemble(Order entity);
 
-    public abstract Order assemble(OrderDto orderDto);
+    Order assemble(OrderDto dto);
 }
